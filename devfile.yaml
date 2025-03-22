@@ -4,7 +4,7 @@ metadata:
 components:
   - name: python
     container:
-      image: registry.redhat.io/ubi9/python-311
+      image: registry.redhat.io/ubi9/python-311@sha256:753524c12d1feb344133d6074994498fbbfea8078cef75eb9b90c37fd5db5f3a
       volumeMounts:
         - name: venv
           path: /home/user/.venv
