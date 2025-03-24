@@ -21,7 +21,7 @@ commands:
       commandLine: |
         ln -sf /usr/bin/python3.11 /usr/bin/python && ln -sf /usr/bin/python3.11 /usr/bin/python3
       group:
-        kind: init
+        kind: build  # 让它在 `build` 阶段执行
 
   - id: run
     exec:
@@ -31,4 +31,3 @@ commands:
       commandLine: python -m venv .venv && . .venv/bin/activate && python hello-world.py
       group:
         kind: run
-
