@@ -13,6 +13,16 @@ components:
     volume:
       size: 1G
 commands:
+  - id: set-default-python
+    exec:
+      label: "Set default Python to 3.11"
+      component: python
+      workingDir: /home/user
+      commandLine: |
+        ln -sf /usr/bin/python3.11 /usr/bin/python && ln -sf /usr/bin/python3.11 /usr/bin/python3
+      group:
+        kind: init
+
   - id: run
     exec:
       label: "Run the application"
@@ -21,3 +31,4 @@ commands:
       commandLine: python -m venv .venv && . .venv/bin/activate && python hello-world.py
       group:
         kind: run
+
