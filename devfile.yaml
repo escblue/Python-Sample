@@ -4,30 +4,24 @@ metadata:
 components:
   - name: python
     container:
-      image: registry.redhat.io/devspaces/udi-rhel9@sha256:5b9bb2cd43b6540ab705f2e2f53cb7ebd1db481a8ab80ddd9e43c80ca7c4cd38
+      image: registry.redhat.io/devspaces/udi-rhel9:3.19
       volumeMounts:
         - name: venv
           path: /home/user/.venv
+      memoryLimit: '2Gi'
+      memoryRequest: '1Gi'
+      cpuLimit: '2'
+      cpuRequest: '1'
       mountSources: true
   - name: venv
     volume:
       size: 1G
 commands:
-  - id: set-default-python
-    exec:
-      label: "Set default Python to 3.11"
-      component: python
-      workingDir: /home/user
-      commandLine: |
-        ln -sf /usr/bin/python3.11 /usr/bin/python && ln -sf /usr/bin/python3.11 /usr/bin/python3
-      group:
-        kind: build  # 让它在 `build` 阶段执行
-
   - id: run
     exec:
       label: "Run the application"
       component: python
-      workingDir: ${PROJECTS_ROOT}/python-hello-world
-      commandLine: python -m venv .venv && . .venv/bin/activate && python hello-world.py
+      workingDir: ${PROJECTS_ROOT}/Python-Sample
+      commandLine: python3.11 -m venv .venv && . .venv/bin/activate && python hello-world.py
       group:
         kind: run
