@@ -25,7 +25,6 @@ commands:
       commandLine: /bin/bash -c "python3.11 -m venv /home/user/.venv && echo 'source /home/user/.venv/bin/activate' >> /home/user/.bashrc"
       group:
         kind: build
-        isDefault: true
 
   - id: run-app
     exec:
@@ -35,4 +34,7 @@ commands:
       commandLine: /bin/bash -c "source /home/user/.venv/bin/activate && python hello-world.py"
       group:
         kind: run
-        isDefault: true
+events:
+  postStart:
+    - setup-venv
+    - run-app
