@@ -26,6 +26,31 @@ commands:
       group:
         kind: build
 
+  - id: install-miniconda
+    exec:
+      label: "Install Miniconda"
+      component: python
+      workingDir: /home/user
+      commandLine: |
+        /bin/bash -c "mkdir -p ~/miniconda3 && \
+        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh && \
+        bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && \
+        rm ~/miniconda3/miniconda.sh"
+      group:
+        kind: build
+
+  - id: create-conda-env
+    exec:
+      label: "Create and Activate Conda Environment with Python 3.11"
+      component: python
+      workingDir: /home/user
+      commandLine: |
+        /bin/bash -c "source ~/miniconda3/bin/activate && \
+        conda create -n py311 python=3.11 -y && \
+        conda activate py311"
+      group:
+        kind: build
+
   - id: run-app
     exec:
       label: "Run the application"
@@ -34,7 +59,8 @@ commands:
       commandLine: /bin/bash -c "source /home/user/.venv/bin/activate && python hello-world.py"
       group:
         kind: run
+
 events:
   postStart:
-    - setup-venv
-    - run-app
+    - install-miniconda
+    - create-conda-env
