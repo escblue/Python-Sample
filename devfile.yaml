@@ -5,9 +5,6 @@ components:
   - name: python
     container:
       image: registry.redhat.io/devspaces/udi-rhel9:3.19
-      volumeMounts:
-        - name: user
-          path: /home/user/
       memoryLimit: '2Gi'
       memoryRequest: '1Gi'
       cpuLimit: '2'
