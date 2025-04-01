@@ -5,6 +5,13 @@ components:
   - name: python
     container:
       image: registry.redhat.io/devspaces/udi-rhel9:3.19
+      volumeMounts:
+        - name: venv
+          path: /home/user/.venv
+      memoryLimit: '2Gi'
+      memoryRequest: '1Gi'
+      cpuLimit: '2'
+      cpuRequest: '1'
       mountSources: true
   - name: venv
     volume:
@@ -18,32 +25,7 @@ commands:
       commandLine: /bin/bash -c "python3.11 -m venv /home/user/.venv && echo 'source /home/user/.venv/bin/activate' >> /home/user/.bashrc"
       group:
         kind: build
-
-  - id: install-miniconda
-    exec:
-      label: "Install Miniconda"
-      component: python
-      workingDir: /home/user
-      commandLine: |
-        /bin/bash -c "mkdir -p ~/miniconda3 && \
-        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh && \
-        bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && \
-        rm ~/miniconda3/miniconda.sh && \
-        source ~/miniconda3/bin/activate"
-      group:
-        kind: build
-
-  - id: create-conda-env
-    exec:
-      label: "Create and Activate Conda Environment with Python 3.11"
-      component: python
-      workingDir: /home/user
-      commandLine: |
-        /bin/bash -c "source ~/miniconda3/bin/activate && \
-        conda create -n py311 python=3.11 -y && \
-        conda activate py311"
-      group:
-        kind: build
+        isDefault: true
 
   - id: run-app
     exec:
@@ -53,8 +35,4 @@ commands:
       commandLine: /bin/bash -c "source /home/user/.venv/bin/activate && python hello-world.py"
       group:
         kind: run
-
-events:
-  postStart:
-    - install-miniconda
-    - create-conda-env
+        isDefault: true
