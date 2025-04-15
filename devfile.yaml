@@ -32,3 +32,7 @@ commands:
       group:
         kind: run
         isDefault: true
+events:
+  postStart:
+    - setup-venv
+    - run-app
