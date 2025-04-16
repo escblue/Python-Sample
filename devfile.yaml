@@ -20,7 +20,6 @@ commands:
     exec:
       label: "Setup and Activate Conda Env"
       component: python-basic
-      workingDir: ${PROJECTS_ROOT}/python-sample
       commandLine: |
         /bin/bash -c "if ! conda info --envs | grep -q '^py311'; then conda create -y -n py311 python=3.11; fi && \
         if ! grep -q 'conda activate py311' ~/.bashrc; then echo 'source /opt/conda/bin/activate py311' >> ~/.bashrc; fi"
