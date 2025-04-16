@@ -1,29 +1,33 @@
 schemaVersion: 2.2.2
 metadata:
-  name: python-hello-world
+  name: python-basic
+
 components:
-  - name: python
+  - name: python-basic
     container:
       image: 128193294407.dkr.ecr.ap-east-1.amazonaws.com/poc-devspace/ubi9:latest
       memoryLimit: '2Gi'
       memoryRequest: '1Gi'
+      sourceMapping: /projects
       volumeMounts:
-        - name: venv
-          path: /home/user/.venv
-      mountSources: true
-  - name: venv
+        - name: conda-envs-vol
+          path: /opt/conda/envs
+  - name: conda-envs-vol
     volume:
-      size: 1G
+      size: 4Gi
 commands:
-  - id: setup-venv
+  - id: create-conda-env
     exec:
-      label: "Setup and Activate Virtual Environment"
-      component: python
+      label: "Setup and Activate Conda Env"
+      component: python-basic
       workingDir: ${PROJECTS_ROOT}/python-sample
-      commandLine: /bin/bash -c "python3.11 -m venv /home/user/.venv && echo 'source /home/user/.venv/bin/activate' >> /home/user/.bashrc"
+      commandLine: |
+        /bin/bash -c "if ! conda info --envs | grep -q '^py311'; then conda create -y -n py311 python=3.11; fi && \
+        if ! grep -q 'conda activate py311' ~/.bashrc; then echo 'source /opt/conda/bin/activate py311' >> ~/.bashrc; fi"
       group:
         kind: build
         isDefault: true
+
 events:
   postStart:
-    - setup-venv
+    - create-conda-env
